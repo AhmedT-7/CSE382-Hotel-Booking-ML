@@ -119,13 +119,6 @@ def prepare_supervised_data(df, task):
     return splits, preprocessor
 
 
-def prepare_clustering_data(df):
-    X, _ = make_features(df, "clustering")
-    preprocessor = build_preprocessor(X)
-
-    return X, preprocessor
-
-
 def main():
     project_dir = Path(__file__).resolve().parent.parent
     dataset_path = project_dir / "data" / "H2.csv"
@@ -170,17 +163,6 @@ def main():
                 print(name, ":", round(rate, 2), "%")
 
         print("Preprocessing completed successfully!")
-
-    print("\n-----------------------------")
-    print("Task: clustering")
-    print("-----------------------------")
-
-    X, cluster_preprocessor = prepare_clustering_data(df)
-
-    X_cluster = cluster_preprocessor.fit_transform(X)
-
-    print("Clustering shape:", X_cluster.shape)
-    print("Clustering preprocessing completed!")
 
     print("\nAll preprocessing tasks completed.")
 

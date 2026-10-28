@@ -1,12 +1,11 @@
 
 from pathlib import Path
-import numpy as np
 import pandas as pd
 
 from cleaning import clean_data
 
 
-BOOKING_FEATURES = [
+COMMON_FEATURES = [
     "LeadTime",
     "ArrivalDateYear",
     "ArrivalDateMonth",
@@ -18,7 +17,6 @@ BOOKING_FEATURES = [
     "Children",
     "Babies",
     "Meal",
-    "Country",
     "MarketSegment",
     "DistributionChannel",
     "IsRepeatedGuest",
@@ -26,27 +24,40 @@ BOOKING_FEATURES = [
     "PreviousBookingsNotCanceled",
     "ReservedRoomType",
     "DepositType",
-    "CustomerType",
+    "CustomerType"
 ]
+
+REGRESSION_FEATURES = COMMON_FEATURES + [
+    "Country"
+]
+
+CLASSIFICATION_FEATURES = COMMON_FEATURES
 
 
 def make_features(df, task):
-    if task not in ["regression", "classification", "clustering"]:
+    if task not in ["regression", "classification"]:
         raise ValueError("Invalid task")
 
     data = df.copy()
     data.columns = data.columns.str.strip()
 
+    if task == "regression":
+        columns = REGRESSION_FEATURES
+        target = "ADR"
+    else:
+        columns = CLASSIFICATION_FEATURES
+        target = "IsCanceled"
+
     missing = [
-        col for col in BOOKING_FEATURES
+        col for col in columns + [target]
         if col not in data.columns
     ]
 
     if missing:
         raise ValueError("Missing columns: " + str(missing))
 
-    X = data[BOOKING_FEATURES].copy()
-    X = X.replace("NULL", np.nan)
+    X = data[columns].copy()
+    X = X.replace("NULL", pd.NA)
 
     X["TotalNights"] = (
         X["StaysInWeekendNights"] +
@@ -59,28 +70,7 @@ def make_features(df, task):
         X["Babies"]
     )
 
-    X["LogLeadTime"] = np.log1p(X["LeadTime"])
-
-    if task == "regression":
-        if "ADR" not in data.columns:
-            raise ValueError("ADR target missing")
-
-        y = data["ADR"].copy()
-
-    elif task == "classification":
-        if "IsCanceled" not in data.columns:
-            raise ValueError("IsCanceled target missing")
-
-        y = data["IsCanceled"].copy()
-
-        if "ADR" in data.columns:
-            X["ADR"] = data["ADR"]
-
-    else:
-        y = None
-
-        if "ADR" in data.columns:
-            X["ADR"] = data["ADR"]
+    y = data[target].copy()
 
     return X, y
 
@@ -91,14 +81,10 @@ if __name__ == "__main__":
     df = pd.read_csv(project_dir / "data" / "H2.csv")
     df = clean_data(df)
 
-    for task in ["regression", "classification", "clustering"]:
+    for task in ["regression", "classification"]:
         X, y = make_features(df, task)
 
         print("\nTask:", task)
         print("Feature shape:", X.shape)
-        print("Number of features:", len(X.columns))
-
-        if y is not None:
-            print("Target:", y.name)
-
+        print("Target:", y.name)
         print("Features:", X.columns.tolist())
