@@ -28,3 +28,14 @@ Rows are actual classes; columns are predicted classes.
 
 Random Forest has the highest validation F1-score and ROC-AUC among these tuned models.
 This is a validation-based result; final selection and test evaluation are still to come.
+
+
+## Cancellation leakage audit
+
+**Prediction point:** when a new booking is first made.
+
+The model predicts `IsCanceled`. The features come from `features.py` and describe information expected to be available at booking time, including arrival details, lead time, guest counts, room type reserved, deposit type, and prior guest booking history.
+
+The feature builder does not include `IsCanceled` as an input. It also excludes fields that may reflect events after the booking is made, including `BookingChanges`, `AssignedRoomType`, `DaysInWaitingList`, `ReservationStatus`, and `ReservationStatusDate`. These could reveal later changes or outcomes and are not appropriate for a prediction made at booking time.
+
+This audit depends on the stated prediction point. If the prediction is made later in the booking lifecycle, the team must review the allowed features again.
