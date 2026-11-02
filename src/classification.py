@@ -10,7 +10,9 @@ from sklearn.metrics import (
     confusion_matrix,
     roc_auc_score,
 )
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
+from sklearn.svm import SVC
 
 from cleaning import clean_data
 from preprocessing import prepare_supervised_data
@@ -28,24 +30,44 @@ models = {
         random_state=42,
         n_jobs=-1,
     ),
+    "RBF SVM": SVC(
+        kernel="rbf",
+        random_state=42,
+    ),
 }
 
 for name, classifier in models.items():
     print(f"\n===== {name} =====")
+
+    X_train = splits["X_train"]
+    y_train = splits["y_train"]
+
+    if name == "RBF SVM":
+        X_train, _, y_train, _ = train_test_split(
+            X_train,
+            y_train,
+            train_size=5000,
+            stratify=y_train,
+            random_state=42,
+        )
+        print("Training rows used for SVM:", len(y_train))
 
     model = Pipeline(steps=[
         ("preprocessing", clone(preprocessor)),
         ("classifier", classifier),
     ])
 
-    model.fit(splits["X_train"], splits["y_train"])
+    model.fit(X_train, y_train)
 
     actual = splits["y_val"]
     predicted = model.predict(splits["X_val"])
-    probabilities = model.predict_proba(splits["X_val"])[:, 1]
+    if hasattr(model, "predict_proba"):
+     scores = model.predict_proba(splits["X_val"])[:, 1]
+    else:
+     scores = model.decision_function(splits["X_val"])
 
     print("Accuracy:", accuracy_score(actual, predicted))
-    print("ROC-AUC:", roc_auc_score(actual, probabilities))
+    print("ROC-AUC:", roc_auc_score(actual, scores))
     print("Confusion matrix:")
     print(confusion_matrix(actual, predicted))
     print("Detailed results:")
