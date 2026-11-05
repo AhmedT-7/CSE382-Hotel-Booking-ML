@@ -12,7 +12,7 @@ def clean_data(df, remove_zero_guests=False):
 
     # 2. Remove spaces from text values
     text_columns = cleaned_df.select_dtypes(
-        include=["object"]
+        include=["object", "str"]
     ).columns
 
     for column in text_columns:

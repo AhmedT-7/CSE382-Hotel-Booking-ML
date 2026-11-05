@@ -46,7 +46,7 @@ print(df.columns.tolist())
 
 # Summary statistics for categorical columns
 print("\n9. Categorical Summary:")
-print(df.describe(include=["object"]))
+print(df.describe(include=["object", "str"]))
 
 # Missing values analysis
 missing = df.isnull().sum()
@@ -205,7 +205,7 @@ for status in [0, 1]:
 print("\nUnique Values in Each Column:")
 
 categorical_columns = df.select_dtypes(
-    include=["object"]
+    include=["object", "str"]
 ).columns
 
 for column in categorical_columns:
