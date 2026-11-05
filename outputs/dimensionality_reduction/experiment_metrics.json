@@ -1,0 +1,71 @@
+{
+  "metadata": {
+    "random_state": 42,
+    "evaluation_split": "validation",
+    "test_set_used": false,
+    "pca_variance_threshold": 0.95,
+    "prediction_time": "booking creation",
+    "classification": {
+      "train_rows": 55365,
+      "validation_rows": 12071,
+      "held_out_test_rows": 11894
+    },
+    "regression": {
+      "train_rows": 55891,
+      "validation_rows": 12079,
+      "held_out_test_rows": 11360
+    }
+  },
+  "results": [
+    {
+      "task": "classification",
+      "method": "Original",
+      "train_seconds": 1.437,
+      "original_dimensions": 58,
+      "retained_dimensions": 58,
+      "accuracy": 0.76357,
+      "f1": 0.62497,
+      "roc_auc": 0.79891
+    },
+    {
+      "task": "classification",
+      "method": "PCA",
+      "train_seconds": 1.027,
+      "original_dimensions": 58,
+      "retained_dimensions": 21,
+      "accuracy": 0.75719,
+      "f1": 0.61841,
+      "roc_auc": 0.78855
+    },
+    {
+      "task": "classification",
+      "method": "LDA",
+      "train_seconds": 1.021,
+      "original_dimensions": 58,
+      "retained_dimensions": 1,
+      "accuracy": 0.75114,
+      "f1": 0.62488,
+      "roc_auc": 0.78885
+    },
+    {
+      "task": "regression",
+      "method": "Original",
+      "train_seconds": 1.425,
+      "original_dimensions": 213,
+      "retained_dimensions": 213,
+      "mae": 16.96986,
+      "rmse": 23.19222,
+      "r2": 0.65124
+    },
+    {
+      "task": "regression",
+      "method": "PCA",
+      "train_seconds": 3.844,
+      "original_dimensions": 213,
+      "retained_dimensions": 28,
+      "mae": 20.50503,
+      "rmse": 28.19475,
+      "r2": 0.48456
+    }
+  ]
+}
