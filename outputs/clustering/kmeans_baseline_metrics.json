@@ -1,0 +1,39 @@
+{
+  "algorithm": "KMeans",
+  "config": "baseline",
+  "n_clusters": 4,
+  "n_rows": 79163,
+  "n_features_after_encoding": 32,
+  "train_time_sec": 0.75,
+  "silhouette": 0.16406009721580941,
+  "davies_bouldin": 1.6816120929134,
+  "features": [
+    "LeadTime",
+    "PreviousCancellations",
+    "PreviousBookingsNotCanceled",
+    "StaysInWeekendNights",
+    "StaysInWeekNights",
+    "Adults",
+    "Kids",
+    "IsRepeatedGuest",
+    "MarketSegment",
+    "DistributionChannel",
+    "CustomerType",
+    "DepositType",
+    "Meal"
+  ],
+  "excluded": {
+    "IsCanceled": "outcome of the booking",
+    "ReservationStatus": "outcome of the booking",
+    "ReservationStatusDate": "set after the outcome",
+    "ADR": "regression target, used only to describe clusters",
+    "AssignedRoomType": "known only at check-in",
+    "BookingChanges": "changes after booking",
+    "DaysInWaitingList": "changes after booking",
+    "TotalOfSpecialRequests": "can change after booking",
+    "RequiredCarParkingSpaces": "can change after booking",
+    "Country": "often filled at check-in, high cardinality",
+    "Agent": "ID with many levels",
+    "Company": "ID, about 95% missing"
+  }
+}

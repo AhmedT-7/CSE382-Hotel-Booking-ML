@@ -1,0 +1,6 @@
+task,method,train_seconds,original_dimensions,retained_dimensions,accuracy,f1,roc_auc,mae,rmse,r2
+classification,Original,1.437,58,58,0.76357,0.62497,0.79891,,,
+classification,PCA,1.027,58,21,0.75719,0.61841,0.78855,,,
+classification,LDA,1.021,58,1,0.75114,0.62488,0.78885,,,
+regression,Original,1.425,213,213,,,,16.96986,23.19222,0.65124
+regression,PCA,3.844,213,28,,,,20.50503,28.19475,0.48456
